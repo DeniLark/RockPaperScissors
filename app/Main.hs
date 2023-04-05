@@ -2,11 +2,10 @@ module Main
   ( main
   ) where
 
-import           GameLogic
-import           View
+import           View                           ( startApp )
 
 main :: IO ()
-main = mainMenu [("Классический вариант", Classic)]
+main = startApp
 
 
 

@@ -1,9 +1,22 @@
 module View
-  ( mainMenu
+  ( startApp
   ) where
 
-import           Control
-import           GameLogic
+import           Control                        ( HandlerInput(..)
+                                                , handlerInputGame
+                                                , handlerInputMainMenu
+                                                , stepRandom
+                                                )
+import           GameLogic                      ( GameType(..)
+                                                , GameValue
+                                                , Player(..)
+                                                , getGameValues
+                                                , getRules
+                                                , winnerMessage
+                                                )
+
+startApp :: IO ()
+startApp = mainMenu [("Классический вариант", Classic)]
 
 mainMenu :: [(String, GameType)] -> IO ()
 mainMenu gameTypes = do
@@ -31,9 +44,9 @@ game gameType = do
   mapM_ (\(n, f) -> putStrLn $ show n <> ") " <> show f) figures
   putStrLn "q - для выхода"
 
-  input <- handlerInputGame figures <$> getLine
-  case input of
-    Exit       -> pure ()
+  inputGameValue <- handlerInputGame figures <$> getLine
+  case inputGameValue of
+    Exit       -> startApp
     Error  err -> putStrLn err >> game gameType
     Result fig -> do
       putStrLn $ "Ты выбрал: " <> show fig
@@ -41,9 +54,8 @@ game gameType = do
       putStrLn $ "ПК: " <> show figPC
       putStrLn $ winnerMessage (Player, fig) (Pc, figPC)
 
-  pure ()
+      game gameType
 
  where
   figures :: [(Int, GameValue)]
   figures = zip [1 ..] $ getGameValues gameType
-

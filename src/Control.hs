@@ -1,8 +1,17 @@
-module Control where
+module Control
+  ( handlerInputMainMenu
+  , handlerInputGame
+  , stepRandom
+  , HandlerInput(..)
+  ) where
 
-import           System.Random
+import           System.Random                  ( Random(randomR)
+                                                , getStdGen
+                                                )
 
-import           GameLogic
+import           GameLogic                      ( GameType
+                                                , GameValue
+                                                )
 
 data HandlerInput a = Exit
                     | Error String
@@ -25,4 +34,4 @@ handlerInputGame gameValues input = case reads input :: [(Int, String)] of
 
 stepRandom :: [GameValue] -> IO GameValue
 stepRandom gameValues =
-  (gameValues !!) . fst . randomR (0, length gameValues) <$> getStdGen
+  (gameValues !!) . fst . randomR (0, length gameValues - 1) <$> getStdGen
