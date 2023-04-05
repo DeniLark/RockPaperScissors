@@ -2,10 +2,54 @@
 
 module GameLogic
   ( winnerMessage
+  , GameType(..)
+  , GameValue(..)
+  , getRules
+  , getGameValues
+  , Player(..)
   ) where
 
-data GameValue = Rock | Paper | Scissors
-  deriving (Eq, Show)
+
+data GameType = Classic     -- классический вариант 
+              | FromFrance  -- колодец, камень, ножницы, бумага 
+              | FromBBT     -- камень, ножницы, бумага, ящерица, Спок
+
+getRules :: GameType -> String
+getRules Classic = unlines
+  [ "Бумага  побеждает камень"
+  , "Камень  побеждает ножницы"
+  , "Ножницы побеждают бумагу"
+  ]
+getRules FromFrance = unlines
+  [ "Бумага  побеждает камень и колодец"
+  , "Камень  побеждает ножницы"
+  , "Ножницы побеждают бумагу"
+  , "Колодец побеждает ножницы и камень"
+  ]
+getRules FromBBT = unlines
+  [ "Бумага  побеждает камень и Спока"
+  , "Камень  побеждает ножницы и ящерицу"
+  , "Ножницы побеждают бумагу и ящерицу"
+  , "Ящерица побеждает Спока и бумагу"
+  , "Спок    побеждает ножницы и камень"
+  ]
+
+getGameValues :: GameType -> [GameValue]
+getGameValues Classic    = [Rock, Scissors, Paper]
+getGameValues FromFrance = [Well, Rock, Scissors, Paper]
+getGameValues FromBBT    = [Rock, Scissors, Paper, Lizard, Spock]
+
+data GameValue = Rock | Paper | Scissors | Well | Lizard | Spock
+  deriving Eq
+
+instance Show GameValue where
+  show Rock     = "Камень"
+  show Paper    = "Бумага"
+  show Scissors = "Ножницы"
+  show Well     = "Колодец"
+  show Lizard   = "Ящерица"
+  show Spock    = "Спок"
+
 
 data Player = Player | Pc
 
@@ -15,7 +59,7 @@ winnerMessage a =
       "Ничья"
       (\case
         Player -> "Победитель: ты"
-        Pc     -> "Победитель: случай"
+        Pc     -> "Победитель: ПК"
       )
     . winner a
 
@@ -33,8 +77,3 @@ winnerGameValue Scissors Paper    = Just Scissors
 winnerGameValue a b | a == b    = Nothing
                     | otherwise = winnerGameValue b a
 
-{-
-  1. Бумага побеждает камень  
-     Камень побеждает ножницы 
-     Ножницы побеждают бумагу 
--}

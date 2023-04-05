@@ -1,6 +1,12 @@
-module Main (main) where
+module Main
+  ( main
+  ) where
 
-import Lib
+import           GameLogic
+import           View
 
 main :: IO ()
-main = someFunc
+main = mainMenu [("Классический вариант", Classic)]
+
+
+
