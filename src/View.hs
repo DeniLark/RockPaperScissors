@@ -16,7 +16,11 @@ import           GameLogic                      ( GameType(..)
                                                 )
 
 startApp :: IO ()
-startApp = mainMenu [("Классический вариант", Classic)]
+startApp = mainMenu
+  [ ("Классический вариант"                  , Classic)
+  , ("Колодец, камень, ножницы, бумага"      , FromFrance)
+  , ("Камень, ножницы, бумага, ящерица, Спок", FromBBT)
+  ]
 
 mainMenu :: [(String, GameType)] -> IO ()
 mainMenu gameTypes = do
@@ -51,8 +55,9 @@ game gameType = do
     Result fig -> do
       putStrLn $ "Ты выбрал: " <> show fig
       figPC <- stepRandom $ snd <$> figures
-      putStrLn $ "ПК: " <> show figPC
+      putStrLn $ "ПК выбрал: " <> show figPC
       putStrLn $ winnerMessage (Player, fig) (Pc, figPC)
+      putStrLn ""
 
       game gameType
 
