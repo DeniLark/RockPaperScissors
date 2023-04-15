@@ -6,7 +6,7 @@ module Control
   ) where
 
 import           System.Random                  ( Random(randomR)
-                                                , getStdGen
+                                                , newStdGen
                                                 )
 
 import           GameLogic                      ( GameType
@@ -34,4 +34,4 @@ handlerInputGame gameValues input = case reads input :: [(Int, String)] of
 
 stepRandom :: [GameValue] -> IO GameValue
 stepRandom gameValues =
-  (gameValues !!) . fst . randomR (0, length gameValues - 1) <$> getStdGen
+  (gameValues !!) . fst . randomR (0, length gameValues - 1) <$> newStdGen
